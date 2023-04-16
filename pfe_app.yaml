@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pfe-app
+  namespace: default
+  labels:
+    app: pfe/-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pfe-app
+  template:
+    metadata:
+      labels:
+        app: pfe-app
+    spec:
+      containers:
+      - name: pfe-app
+        image: "hasnaoui68/pfe-app-1.0"
+        ports:
+          - containerPort: 3000
+        env:
+          - name: MONGODB_URI
+            value: "mongodb://192.168.1.25:31403/users"
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "0.5"
+        volumeMounts:
+          - name: pfe-app-persistent-storage
+            mountPath: /app/data
+      - name: mongodb
+        image: mongo:latest
+        ports:
+          - containerPort: 31403
+        volumeMounts:
+          - name: mongodb-persistent-storage
+            mountPath: /data/db
+      volumes:
+        - name: nodejs-app-persistent-storage
+          persistentVolumeClaim:
+            claimName: nodejs-app-pvc
+        - name: mongodb-persistent-storage
+          persistentVolumeClaim:
+            claimName: mongodb-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pfe-app
+  namespace: default
+spec:
+  selector:
+    app: pfe-app
+  type: LoadBalancer
+  ports:
+  - name: http
+    targetPort: 3000
+    port: 80
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pfe-app-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongodb-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
