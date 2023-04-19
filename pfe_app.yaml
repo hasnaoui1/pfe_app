@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: pfe-app
+  name: pfe_app
   namespace: default
   labels:
-    app: pfe/-app
+    app: pfe_app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: pfe-app
+      app: pfe_app
   template:
     metadata:
       labels:
-        app: pfe-app
+        app: pfe_app
     spec:
       containers:
-      - name: pfe-app
-        image: "hasnaoui68/pfe-app-1.0"
+      - name: pfe_app
+        image: "hasnaoui68/node-app-2.0"
         ports:
           - containerPort: 3000
         env:
@@ -28,7 +28,7 @@ spec:
             memory: "512Mi"
             cpu: "0.5"
         volumeMounts:
-          - name: pfe-app-persistent-storage
+          - name: pfe_app-persistent-storage
             mountPath: /app/data
       - name: mongodb
         image: mongo:latest
@@ -48,11 +48,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: pfe-app
+  name: pfe_app
   namespace: default
 spec:
   selector:
-    app: pfe-app
+    app: pfe_app
   type: LoadBalancer
   ports:
   - name: http
@@ -62,7 +62,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: pfe-app-pvc
+  name: pfe_app-pvc
 spec:
   accessModes:
     - ReadWriteOnce
