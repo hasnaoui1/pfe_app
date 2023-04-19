@@ -22,7 +22,7 @@ spec:
           - containerPort: 3000
         env:
           - name: MONGODB_URI
-            value: "mongodb://192.168.1.25:31403/users"
+            value: "mongodb://mongodb:27017/users"
         resources:
           limits:
             memory: "512Mi"
@@ -33,12 +33,12 @@ spec:
       - name: mongodb
         image: mongo:latest
         ports:
-          - containerPort: 31403
+          - containerPort: 27017
         volumeMounts:
           - name: mongodb-persistent-storage
             mountPath: /data/db
       volumes:
-        - name: nodejs-app-persistent-storage
+        - name: pfe-app-persistent-storage
           persistentVolumeClaim:
             claimName: pfe-app-pvc
         - name: mongodb-persistent-storage
@@ -80,4 +80,3 @@ spec:
   resources:
     requests:
       storage: 1Gi
-
