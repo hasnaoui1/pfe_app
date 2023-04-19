@@ -40,10 +40,10 @@ spec:
       volumes:
         - name: pfe-app-persistent-storage
           persistentVolumeClaim:
-            claimName: pfe-app-pvc
+            claimName: mongodb-data-mongodb-tolerations-0
         - name: mongodb-persistent-storage
           persistentVolumeClaim:
-            claimName: mongodb-pvc
+            claimName: mongodb-data-mongodb-tolerations-0
 ---
 apiVersion: v1
 kind: Service
@@ -62,18 +62,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: pfe-app-pvc
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mongodb-pvc
+  name: mongodb-data-mongodb-tolerations-0
 spec:
   accessModes:
     - ReadWriteOnce
