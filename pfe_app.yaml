@@ -17,7 +17,7 @@ spec:
           image: "hasnaoui68/node-app-2.0"
           env:
             - name: MONGO_URL
-              value: "mongodb://127.0.0.1:27017/users" # Change as needed
+              value: "mongodb://mongo-service:27017/users" # Change as needed
           ports:
             - containerPort: 8083 # Change as needed
 ---
