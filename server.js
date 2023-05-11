@@ -3,12 +3,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
 
+
+
 // Constants
 const PORT = 3000;
 const HOST = '0.0.0.0';
 
 // Connect to the database
-mongoose.connect('mongodb://127.0.0.1:27017/users', {
+mongoose.connect('mongodb://192.168.1.23:30000/users', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
@@ -29,7 +31,7 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    unique: true,
+    uniqu: true,
   },
 });
 
@@ -42,26 +44,13 @@ const app = express();
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-// Route to create a new user
-app.post('/users', async (req, res, next) => {
-  try {
-    const user = new User(req.body);
-    const savedUser = await user.save();
-    res.json(savedUser);
-  } catch (error) {
-    next(error);
-  }
-});
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err);
-  res.status(500).json({ error: 'Internal server error' });
-});
 // Route to test the server
 app.get('/', (req, res) => {
   res.send('Server is up and running!');
 });
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.get('/users', async (req, res, next) => {
   try {
     const users = await User.find();
@@ -71,8 +60,28 @@ app.get('/users', async (req, res, next) => {
   }
 });
 
+app.post('/users', async (req, res, next) => {
+  try {
+    const user = new User(req.body);
+    const result = await user.save();
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+// Serve static files from the 'public' directory
+app.use(express.static('public'));
+
+// Route to serve the HTML form
+app.get('/create-user', (req, res) => {
+  res.sendFile('create-user.html', { root: __dirname + '/' });
+});
+
+
+
 
 
 app.listen(PORT, HOST);
 console.log(`Running on http://${HOST}:${PORT}`);
-
