@@ -8,6 +8,8 @@ RUN npm install express
 RUN npm install mongodb
 
 COPY . .
+COPY index.html .
+
 
 EXPOSE 3000
 
