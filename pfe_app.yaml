@@ -6,7 +6,7 @@ spec:
   selector:
     matchLabels:
       app: pfe-app
-  replicas: 1 # Change as needed
+  replicas: 1
   template:
     metadata:
       labels:
@@ -17,18 +17,20 @@ spec:
           image: "hasnaoui68/node-app-2.0"
           env:
             - name: MONGO_URL
-              value: "mongodb://192.168.1.23:30000/users" # Change as needed
+              value: "mongodb://192.168.1.23:30000/users"
           ports:
-            - containerPort: 8083 # Change as needed
+            - containerPort: 8083
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: mongo-service
+  name: pfe-app-service
 spec:
   selector:
-    app: mongo
+    app: pfe-app
+  type: NodePort
   ports:
     - protocol: TCP
-      port: 31403
-      targetPort: 31403
+      port: 8083
+      targetPort: 8083
+      nodePort: 31000
