@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express');
-constezf mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 const PORT = 3000;
 const HOST = '0.0.0.0';
