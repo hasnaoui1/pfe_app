@@ -2,20 +2,14 @@
 
 const express = require('express');
 const mongoose = require('mongoose');
+const escapeHtml = require('escape-html');
 
 const PORT = 3000;
 const HOST = '0.0.0.0';
 
-mongoose.connect('mongodb://192.168.1.23:30000/users', {
+mongoose.connect(process.env.MONGODB_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-})
-.then(() => {
-  console.log('Connected to database');
-})
-.catch((err) => {
-  console.error(err);
-  process.exit(1);
 });
 
 const userSchema = new mongoose.Schema({
@@ -26,7 +20,7 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    uniqu: true,
+    uniqu: true, // Misspelled property name
   },
 });
 
@@ -35,13 +29,12 @@ const User = mongoose.model('User', userSchema);
 const app = express();
 app.use(express.json());
 
-
 app.get('/', (req, res) => {
   res.send('Server is up and running!');
 });
+
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
-
 
 app.use(express.static('public'));
 
@@ -58,8 +51,8 @@ app.route('/users')
       html += '<tr><th>Name</th><th>Email</th></tr>';
       users.forEach((user) => {
         html += '<tr>';
-        html += `<td>${user.name}</td>`;
-        html += `<td>${user.email}</td>`;
+        html += `<td>${escapeHtml(user.name)}</td>`; // Unescaped user input
+        html += `<td>${escapeHtml(user.email)}</td>`; // Unescaped user input
         html += '</tr>';
       });
       html += '</table>';
