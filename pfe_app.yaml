@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pfe-app
+spec:
+  selector:
+    matchLabels:
+      app: pfe-app
+  replicas: 1 # Change as needed
+  template:
+    metadata:
+      labels:
+        app: pfe-app
+    spec:
+      containers:
+        - name: pfe-app
+          image: "hasnaoui68/node-app-2.0"
+          env:
+            - name: MONGO_URL
+              value: "mongodb://192.168.1.23:30000/users" # Change as needed
+          ports:
+            - containerPort: 8083 # Change as needed
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-service
+spec:
+  selector:
+    app: mongo
+  ports:
+    - protocol: TCP
+      port: 31403
+      targetPort: 31403
