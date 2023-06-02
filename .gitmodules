@@ -1,3 +1,0 @@
-[submodule "kubernetes-prometheus"]
-	path = kubernetes-prometheus
-	url = https://github.com/hasnaoui1/pfe_app.git
